@@ -7,7 +7,7 @@ db_path = r"C:\Users\Anjou\bank.db"
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
-# 创建 customers 表
+'''# 创建 customers 表
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS customers (
         customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,7 +27,30 @@ cursor.execute("""
         customer_id INTEGER NOT NULL,
         FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
     )
+""")'''
+
+# 创建 stocks 表
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS stocks (
+        stock_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        stock_name TEXT NOT NULL,
+        stock_symbol TEXT NOT NULL UNIQUE,
+        stock_price REAL NOT NULL
+    )
 """)
+
+# 插入示例股票数据
+stocks_data = [
+    ("Apple Inc.", "AAPL", 150.0),
+    ("Microsoft Corp.", "MSFT", 280.0),
+    ("Tesla Inc.", "TSLA", 750.0),
+    ("Amazon.com Inc.", "AMZN", 3300.0),
+    ("Google LLC", "GOOGL", 2800.0)
+]
+
+cursor.executemany("""
+    INSERT OR IGNORE INTO stocks (stock_name, stock_symbol, stock_price) VALUES (?, ?, ?)
+""", stocks_data)
 
 # 提交更改并关闭连接
 conn.commit()
